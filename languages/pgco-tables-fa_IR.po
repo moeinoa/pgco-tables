@@ -1,0 +1,392 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PGCO Tables\n"
+"POT-Creation-Date: 2025-12-03 16:10+0330\n"
+"PO-Revision-Date: 2025-12-03 16:15+0330\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: pgco-tables.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: includes/Admin.php:44 includes/Admin.php:45
+msgid "Settings"
+msgstr "تنظیمات"
+
+#: includes/Admin.php:84
+msgid "Auto Width"
+msgstr "عرض خودکار"
+
+#: includes/Admin.php:85
+msgid "Feature control DataTables' smart column width handling."
+msgstr "کنترل ویژگی مدیریت هوشمند عرض ستون در DataTables."
+
+#: includes/Admin.php:90
+msgid "Info"
+msgstr "اطلاعات"
+
+#: includes/Admin.php:91
+msgid "Feature control table information display field."
+msgstr "فیلد نمایش اطلاعات جدول کنترل ویژگی."
+
+#: includes/Admin.php:96
+msgid "Length Change"
+msgstr "تغییر طول"
+
+#: includes/Admin.php:97
+msgid ""
+"Feature control the end user's ability to change the paging display length "
+"of the table."
+msgstr ""
+"کنترل ویژگی، توانایی کاربر نهایی را در تغییر طول نمایش صفحه‌بندی جدول کنترل "
+"می‌کند."
+
+#: includes/Admin.php:102
+msgid "Paging"
+msgstr "صفحه‌بندی"
+
+#: includes/Admin.php:103
+msgid "Enable or disable table pagination."
+msgstr "فعال یا غیرفعال کردن صفحه‌بندی جدول."
+
+#: includes/Admin.php:108
+msgid "Processing"
+msgstr "در حال پردازش..."
+
+#: includes/Admin.php:109
+msgid "Feature control the processing indicator."
+msgstr "کنترل ویژگی شاخص پردازش."
+
+#: includes/Admin.php:114
+msgid "Scroll X"
+msgstr "اسکرول افقی"
+
+#: includes/Admin.php:115
+msgid "Horizontal scrolling."
+msgstr "اسکرول افقی."
+
+#: includes/Admin.php:120
+msgid "Scroll Y"
+msgstr "اسکرول عمودی"
+
+#: includes/Admin.php:121
+msgid "Vertical scrolling."
+msgstr "اسکرول عمودی."
+
+#: includes/Admin.php:126
+msgid "Ordering"
+msgstr "ترتیب بندی"
+
+#: includes/Admin.php:127
+msgid "Feature control ordering (sorting) abilities in DataTables."
+msgstr "قابلیت‌های کنترل ویژگی مرتب‌سازی (مرتب‌سازی) در DataTables."
+
+#: includes/Admin.php:132
+msgid "Searching"
+msgstr "جست و جو"
+
+#: includes/Admin.php:133
+msgid "Feature control search (filtering) abilities."
+msgstr "قابلیت‌های جستجوی کنترل ویژگی (فیلتر کردن)."
+
+#: includes/Admin.php:138
+msgid "Select"
+msgstr "انتخاب کردن"
+
+#: includes/Admin.php:139
+msgid "Feature control selection abilities."
+msgstr "توانایی‌های انتخاب کنترل ویژگی"
+
+#: includes/Admin.php:144
+msgid "Header Background Color"
+msgstr "رنگ پس‌زمینه سربرگ"
+
+#: includes/Admin.php:145
+msgid "Set the background color of the table header."
+msgstr "رنگ پس زمینه سربرگ  جدول را تنظیم کنید."
+
+#: includes/Admin.php:150
+msgid "Header Text Color"
+msgstr "رنگ متن سربرگ"
+
+#: includes/Admin.php:151
+msgid "Set the text color of the table header."
+msgstr "رنگ متن سربرگ  جدول را تنظیم کنید."
+
+#: includes/Admin.php:156
+msgid "Row Background Color"
+msgstr "رنگ پس‌زمینه ردیف‌ها"
+
+#: includes/Admin.php:157
+msgid "Set the background color of the table rows."
+msgstr "رنگ پس زمینه ردیف‌ها را تنظیم کنید."
+
+#: includes/Admin.php:162
+msgid "Row Text Color"
+msgstr "رنگ متن ردیف"
+
+#: includes/Admin.php:163
+msgid "Set the text color of the table rows."
+msgstr "رنگ متن ردیف‌ها را تنظیم کنید."
+
+#: includes/Admin.php:168
+msgid "Border Color"
+msgstr "رنگ حاشیه"
+
+#: includes/Admin.php:169
+msgid "Set the border color of the table."
+msgstr "فعالسازی قابلیت ترتیب بندی."
+
+#: includes/Admin.php:177
+msgid "PGCO Tables Settings"
+msgstr "تنظیمات جدول"
+
+#: includes/Admin.php:206
+msgid "Save Changes"
+msgstr "ذخیره تنظیمات"
+
+#: includes/Enqueue.php:110 includes/Enqueue.php:187
+msgid "No data available in table"
+msgstr "دیتایی وجود ندارد"
+
+#: includes/Enqueue.php:111 includes/Enqueue.php:188
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "نمایش _START_ تا _END_ از _TOTAL_ ورودی"
+
+#: includes/Enqueue.php:112 includes/Enqueue.php:189
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "نمایش 0 از 0 ورودی"
+
+#: includes/Enqueue.php:113 includes/Enqueue.php:190
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(فیلتر شده از مجموع _MAX_ ورودی)"
+
+#: includes/Enqueue.php:114 includes/Enqueue.php:191
+msgid ","
+msgstr ","
+
+#: includes/Enqueue.php:115 includes/Enqueue.php:192
+msgid "Show _MENU_ entries"
+msgstr "نمایش _MENU_ ورودی"
+
+#: includes/Enqueue.php:116 includes/Enqueue.php:193
+msgid "Loading..."
+msgstr "در حال بارگذاری..."
+
+#: includes/Enqueue.php:117 includes/Enqueue.php:194
+msgid "Processing..."
+msgstr "در حال پردازش..."
+
+#: includes/Enqueue.php:118 includes/Enqueue.php:195
+msgid "Search:"
+msgstr "جست و جو:"
+
+#: includes/Enqueue.php:119 includes/Enqueue.php:196
+msgid "No matching records found"
+msgstr "هیچ نتیجه‌ای یافت نشد"
+
+#: includes/Enqueue.php:121 includes/Enqueue.php:198
+msgid "First"
+msgstr "اولین"
+
+#: includes/Enqueue.php:122 includes/Enqueue.php:199
+msgid "Last"
+msgstr "آخرین"
+
+#: includes/Enqueue.php:123 includes/Enqueue.php:200
+msgid "Next"
+msgstr "بعدی"
+
+#: includes/Enqueue.php:124 includes/Enqueue.php:201
+msgid "Previous"
+msgstr "قبلی"
+
+#: includes/Enqueue.php:127 includes/Enqueue.php:204
+msgid "Order by this column"
+msgstr "ترتیب براساس این ستون"
+
+#: includes/Enqueue.php:128 includes/Enqueue.php:205
+msgid "Reverse order this column"
+msgstr "معکوس کردن ترتیب این ستون"
+
+#: includes/PostType.php:47
+msgctxt "Post Type General Name"
+msgid "Tables"
+msgstr "جدول‌ها"
+
+#: includes/PostType.php:48
+msgctxt "Post Type Singular Name"
+msgid "Table"
+msgstr "جدول"
+
+#: includes/PostType.php:49
+msgid "Tables"
+msgstr "جدول‌ها"
+
+#: includes/PostType.php:50 includes/PostType.php:80
+msgid "Table"
+msgstr "جدول"
+
+#: includes/PostType.php:51
+msgid "Item Tables"
+msgstr "جدول آیتم‌ها"
+
+#: includes/PostType.php:52
+msgid "Item Attributes"
+msgstr "مشخصات جدول"
+
+#: includes/PostType.php:53
+msgid "Parent Table:"
+msgstr "جدول والد:"
+
+#: includes/PostType.php:54
+msgid "All Tables"
+msgstr "تمامی جدول‌ها"
+
+#: includes/PostType.php:55
+msgid "Add New Table"
+msgstr "افزودن جدول جدید"
+
+#: includes/PostType.php:56
+msgid "Add New"
+msgstr "افزودن جدید"
+
+#: includes/PostType.php:57
+msgid "New Table"
+msgstr "جدول جدید"
+
+#: includes/PostType.php:58
+msgid "Edit Table"
+msgstr "ویرایش جدول"
+
+#: includes/PostType.php:59
+msgid "Update Table"
+msgstr "بروزرسانی جدول"
+
+#: includes/PostType.php:60
+msgid "View Table"
+msgstr "مشاهده جدول"
+
+#: includes/PostType.php:61
+msgid "View Tables"
+msgstr "مشاهده جدول‌ها"
+
+#: includes/PostType.php:62
+msgid "Search Table"
+msgstr "جست‌وجوی جدول"
+
+#: includes/PostType.php:63
+msgid "Not found"
+msgstr "یافت نشد"
+
+#: includes/PostType.php:64
+msgid "Not found in Trash"
+msgstr "چیزی در زباله‌دان یافت نشد"
+
+#: includes/PostType.php:65
+msgid "Featured Image"
+msgstr "تصویر شاخص"
+
+#: includes/PostType.php:66
+msgid "Set featured image"
+msgstr "تنظیم به عنوان تصویر شاخص"
+
+#: includes/PostType.php:67
+msgid "Remove featured image"
+msgstr "حذف تصویر شاخص"
+
+#: includes/PostType.php:68
+msgid "Use as featured image"
+msgstr "استفاده به عنوان تصویر شاخص"
+
+#: includes/PostType.php:69
+msgid "Insert into table"
+msgstr "استفاده در جدول"
+
+#: includes/PostType.php:70
+msgid "Uploaded to this table"
+msgstr "بارگذاری شده در این جدول"
+
+#: includes/PostType.php:71
+msgid "Tables list"
+msgstr "فهرست  جدول‌ها"
+
+#: includes/PostType.php:72
+msgid "Tables list navigation"
+msgstr "فهرست ناوبری جدول‌ها"
+
+#: includes/PostType.php:73
+msgid "Filter tables list"
+msgstr "فیلتر لیست جدول‌ها"
+
+#: includes/PostType.php:81
+msgid "retrieve and save data from Google Sheets."
+msgstr "دریافت و ذخیره داده ها از گوگل شیت."
+
+#: includes/PostType.php:115
+msgid "Table Settings"
+msgstr "تنظیمات جدول"
+
+#: includes/PostType.php:185
+msgid "Shortcode"
+msgstr ""
+
+#: includes/PostType.php:214
+msgid "Sheet URL"
+msgstr "آدرس شیت"
+
+#: includes/PostType.php:229
+msgid "The URL of the Google Sheet to retrieve data from."
+msgstr "آدرس صفحه گوگل شیت برای دریافت داده ها."
+
+#. Plugin Name of the plugin/theme
+msgid "PGCO Tables"
+msgstr "جداول پتروگرایش"
+
+#. Plugin URI of the plugin/theme
+msgid "https://pgco.info"
+msgstr "https://pgco.info"
+
+#. Description of the plugin/theme
+msgid ""
+"Plugin to retrieve and save data from Google Sheets and display tables on "
+"the website"
+msgstr "افزونه دریافت و ذخیره اطلاعات جداول در گوگل شیت و نمایش در وبسایت"
+
+#. Author of the plugin/theme
+msgid "Moein Akbari"
+msgstr "معین اکبری"
+
+#. Author URI of the plugin/theme
+msgid "https://moein-akbari.ir/"
+msgstr "https://moein-akbari.ir/"
+
+#~ msgid "Show paging in the table."
+#~ msgstr "نمایش صفحه بندی در جدول."
+
+#~ msgid "The height of the table in pixels."
+#~ msgstr "ارتفاع جدول در پیکسل."
+
+#~ msgid "Enable searching in the table."
+#~ msgstr "فعالسازی قابلیت جست و جو."
+
+#~ msgid "Enable select in the table."
+#~ msgstr "فعالسازی قابلیت انتخاب کردن."
+
+#~ msgid "Preview"
+#~ msgstr "پیش‌نمایش"
+
+#~ msgid "Showing page _PAGE_ of _PAGES_"
+#~ msgstr "نمایش صفحه _PAGE_ از _PAGES_"

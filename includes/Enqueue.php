@@ -11,6 +11,8 @@ class Enqueue
 {
     private const FRONTEND_HANDLE = 'pgco-tables-frontend';
 
+    private const RESPONSIVE_HANDLE = 'pgco-tables-responsive';
+
     private static $instance = null;
 
     /**
@@ -129,6 +131,15 @@ class Enqueue
             true
         );
 
+        // Mobile layout: the columns that are not chosen to stay visible open under the row on tap
+        wp_register_script(
+            self::RESPONSIVE_HANDLE,
+            PGCO_TABLES_URL . 'assets/js/responsive-tables.js',
+            [],
+            self::asset_version('assets/js/responsive-tables.js'),
+            true
+        );
+
         // Sticky bar offsets (the height of the fixed site header per window width)
         $offsets = apply_filters('pgco_tables_sticky_offsets', [[1024, 115], [768, 81], [0, 64]]);
 
@@ -150,6 +161,7 @@ class Enqueue
     public static function load(): string
     {
         wp_enqueue_script(self::FRONTEND_HANDLE);
+        wp_enqueue_script(self::RESPONSIVE_HANDLE);
         wp_enqueue_style(self::FRONTEND_HANDLE);
 
         if (wp_style_is(self::FRONTEND_HANDLE, 'done') || ! did_action('wp_head') || did_action('wp_print_footer_scripts')) {

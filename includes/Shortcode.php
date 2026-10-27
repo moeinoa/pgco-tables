@@ -93,7 +93,8 @@ class Shortcode
 			echo '</div>';
 		} elseif ($table) {
 			$this->render_bar($vat_mode);
-			$this->render_table($table, $vat_mode, $vat_rate);
+			$cols = $this->column_count($table);
+			$this->render_table($table, $vat_mode, $vat_rate, PostType::mobile_columns($options, $cols), $cols);
 		} else { ?>
 <div class="pgco-tables-empty">
 	<?php esc_html_e('در حال حاضر اطلاعاتی برای نمایش این جدول موجود نیست.', 'pgco-tables'); ?>
@@ -209,18 +210,46 @@ class Shortcode
 </div>
 <?php }
 
-	private function render_table(array $table, string $vat_mode, string $vat_rate): void
+	/**
+	 * Number of columns of a cached table (from the header row, else the first body row).
+	 */
+	private function column_count(array $table): int
 	{
-		$divide = $vat_mode === 'divide';
-		$rate   = (float) $vat_rate;
+		return count((array) ($table['head'][0] ?? $table['body'][0] ?? []));
+	}
+
+	/**
+	 * Class (and label) attributes of one cell for the mobile layout: on a narrow screen only the visible columns are shown,
+	 * the others (pgco-col-more) are folded into a row that opens on tap (responsive-tables.js).
+	 *
+	 * @param int[]  $visible 0-based indexes of the columns that stay visible on mobile
+	 * @param string $label   header text of the column, printed as data-label on folded body cells
+	 */
+	private function col_attrs(int $index, array $visible, string $label = ''): string
+	{
+		if (in_array($index, $visible, true)) {
+			return $index === min($visible) ? ' class="pgco-col-first"' : '';
+		}
+
+		return ' class="pgco-col-more"' . ($label !== '' ? ' data-label="' . esc_attr($label) . '"' : '');
+	}
+
+	/**
+	 * @param int[] $visible 0-based indexes of the columns that stay visible on mobile
+	 */
+	private function render_table(array $table, string $vat_mode, string $vat_rate, array $visible, int $cols): void
+	{
+		$divide      = $vat_mode === 'divide';
+		$rate        = (float) $vat_rate;
+		$collapsible = $cols > 0 && count($visible) < $cols;
 ?>
-<table class="pgco-table" data-pgco-vat="<?php echo esc_attr($vat_mode); ?>" data-pgco-rate="<?php echo esc_attr($vat_rate); ?>">
+<table class="pgco-table<?php echo $collapsible ? ' pgco-table--collapsible' : ''; ?>" data-pgco-vat="<?php echo esc_attr($vat_mode); ?>" data-pgco-rate="<?php echo esc_attr($vat_rate); ?>">
 	<?php if (isset($table['head'])) { ?>
 	<thead>
 		<?php foreach ($table['head'] as $row) { ?>
 		<tr>
-			<?php foreach ($row as $cell) { ?>
-			<th><?php echo esc_html($cell); ?></th>
+			<?php foreach ($row as $cell_index => $cell) { ?>
+			<th<?php echo $collapsible ? $this->col_attrs($cell_index, $visible) : ''; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in col_attrs ?>><?php echo esc_html($cell); ?></th>
 			<?php } ?>
 		</tr>
 		<?php } ?>
@@ -232,7 +261,7 @@ class Shortcode
 		<?php foreach ($table['body'] as $row) { $last_cell = array_key_last($row); ?>
 		<tr>
 			<?php foreach ($row as $cell_index => $cell) { [$shown, $full] = $this->body_cell((string) $cell, $divide && $cell_index === $last_cell, $rate); ?>
-			<td<?php if ($full !== '') { ?> data-full="<?php echo esc_attr($full); ?>"<?php } ?>><?php echo esc_html($shown); ?></td>
+			<td<?php echo $collapsible ? $this->col_attrs($cell_index, $visible, (string) ($table['head'][0][$cell_index] ?? '')) : ''; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in col_attrs ?><?php if ($full !== '') { ?> data-full="<?php echo esc_attr($full); ?>"<?php } ?>><?php echo esc_html($shown); ?></td>
 			<?php } ?>
 		</tr>
 		<?php } ?>
@@ -243,8 +272,8 @@ class Shortcode
 	<tfoot>
 		<?php foreach ($table['foot'] as $row) { ?>
 		<tr>
-			<?php foreach ($row as $cell) { ?>
-			<th><?php echo esc_html($cell); ?></th>
+			<?php foreach ($row as $cell_index => $cell) { ?>
+			<th<?php echo $collapsible ? $this->col_attrs($cell_index, $visible) : ''; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in col_attrs ?>><?php echo esc_html($cell); ?></th>
 			<?php } ?>
 		</tr>
 		<?php } ?>

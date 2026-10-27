@@ -229,6 +229,42 @@ class PostType
         ];
     }
 
+    /**
+     * The columns of a table that stay visible on a narrow screen; the other columns are folded into a row that
+     * opens on tap. From the table's "mobile-columns" option (column numbers, 1 = the first column); empty = the first
+     * three columns. The last column (the price) is always visible.
+     *
+     * @param array $options The table's _table_options meta.
+     * @param int   $cols    Number of columns of the table.
+     * @return int[] 0-based column indexes, ascending (never empty for a table with columns).
+     */
+    public static function mobile_columns(array $options, int $cols): array
+    {
+        if ($cols <= 0) {
+            return [];
+        }
+
+        $visible = [];
+
+        foreach (preg_split('/[\s,،]+/u', trim((string) ($options['mobile-columns'] ?? ''))) ?: [] as $part) {
+            $number = PriceRange::parse_number($part);
+            $index = $number ? (int) $number - 1 : -1;
+
+            if ($index >= 0 && $index < $cols) {
+                $visible[$index] = $index;
+            }
+        }
+
+        if (! $visible) {
+            $visible = array_slice(range(0, $cols - 1), 0, 3, true);
+        }
+
+        $visible[$cols - 1] = $cols - 1;
+        ksort($visible);
+
+        return array_values($visible);
+    }
+
     public function labels(): void
     {
         $this->labels = [
@@ -360,6 +396,19 @@ class PostType
 
         if (isset($_POST['options']['price-operation'])) {
             $options['price-operation'] = sanitize_key(wp_unslash($_POST['options']['price-operation'])) === 'multiply' ? 'multiply' : 'divide';
+        }
+
+        // column numbers, normalised to "1,2,3" (empty = the default: the first three columns)
+        if (isset($_POST['options']['mobile-columns'])) {
+            $numbers = [];
+            foreach (preg_split('/[\s,،]+/u', sanitize_text_field(wp_unslash($_POST['options']['mobile-columns']))) ?: [] as $part) {
+                $number = PriceRange::parse_number($part);
+                if ($number && $number >= 1 && $number <= 99) {
+                    $numbers[(int) $number] = (int) $number;
+                }
+            }
+            ksort($numbers);
+            $options['mobile-columns'] = implode(',', $numbers);
         }
 
         if (isset($_POST['options']['price-multiplier'])) {
@@ -506,6 +555,22 @@ class PostType
                 </span>
             </div>
             <!-- End: Price Multiplier Field -->
+
+            <!-- Start: Mobile Columns Field -->
+            <div class="settings-field settings-field-text">
+                <label for="mobile-columns" data-title="<?php esc_attr_e('ستون‌های نمایان در موبایل', 'pgco-tables'); ?>">
+                    <input type="text"
+                        id="mobile-columns"
+                        name="options[mobile-columns]"
+                        dir="ltr"
+                        value="<?php echo esc_attr($options['mobile-columns'] ?? ''); ?>"
+                        placeholder="1,2,3">
+                </label>
+                <span class="settings-field-description">
+                    <?php esc_html_e('شماره‌ی ستون‌هایی که در موبایل همیشه دیده شوند (۱ = اولین ستون از راست)، مثلاً 1,3. بقیه با لمس ردیف باز می‌شوند. اگر خالی باشد سه ستون اول نمایش داده می‌شود. ستون آخر (قیمت) همیشه دیده می‌شود.', 'pgco-tables'); ?>
+                </span>
+            </div>
+            <!-- End: Mobile Columns Field -->
 
             <!-- Start: Manual Sync -->
             <div class="settings-field pgco-tables-sync-box">

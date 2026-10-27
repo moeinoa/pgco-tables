@@ -127,3 +127,95 @@ span[id^="tablepress-"][id$="-description"] {
 		content: 'بروزرسانی: ';
 	}
 }
+
+/* Mobile: only the chosen columns stay visible, the others open under the row on tap (responsive-tables.js) */
+@media (max-width: 767px) {
+	table.pgco-table--collapsible .pgco-col-more {
+		display: none;
+	}
+
+	table.pgco-table--collapsible tbody tr {
+		background: #fff;
+	}
+
+	table.pgco-table--collapsible tbody tr:not(.pgco-detail) {
+		cursor: pointer;
+	}
+
+	table.pgco-table--collapsible tbody tr.is-open {
+		background: #f9fafb;
+	}
+
+	/* the first visible column carries the arrow (a pseudo element: no extra cell) */
+	table.pgco-table--collapsible .pgco-col-first {
+		position: relative;
+		padding-inline-start: 28px !important;
+	}
+
+	table.pgco-table--collapsible tbody .pgco-col-first::before {
+		content: '';
+		position: absolute;
+		inset-inline-start: 6px;
+		top: 50%;
+		width: 16px;
+		height: 16px;
+		margin-top: -8px;
+		background: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%23d71a20' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px 16px no-repeat;
+		transition: transform .2s ease;
+	}
+
+	table.pgco-table--collapsible tbody tr.is-open > .pgco-col-first::before {
+		transform: rotate(180deg);
+	}
+
+	/* the row with the folded columns, built on the first tap */
+	table.pgco-table--collapsible tr.pgco-detail {
+		display: none;
+	}
+
+	table.pgco-table--collapsible tr.pgco-detail.is-open {
+		display: table-row;
+	}
+
+	table.pgco-table--collapsible tr.pgco-detail td {
+		padding: 0;
+		text-align: start;
+		background: #f9fafb;
+	}
+
+	table.pgco-table--collapsible tr.pgco-detail dl {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 6px 12px;
+		margin-block: 0;
+		padding: 8px 12px;
+		font-size: 12px;
+	}
+
+	table.pgco-table--collapsible tr.pgco-detail dt {
+		margin-block: 0;
+		font-weight: 600;
+		color: #7f8c9a;
+		white-space: nowrap;
+	}
+
+	table.pgco-table--collapsible tr.pgco-detail dd {
+		margin-block: 0;
+		text-align: end;
+	}
+}
+
+/* Print always shows every column */
+@media print {
+	table.pgco-table--collapsible .pgco-col-more {
+		display: table-cell !important;
+	}
+
+	table.pgco-table--collapsible tr.pgco-detail {
+		display: none !important;
+	}
+
+	table.pgco-table--collapsible tbody .pgco-col-first::before {
+		display: none;
+	}
+}

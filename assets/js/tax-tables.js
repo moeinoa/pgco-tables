@@ -57,33 +57,52 @@
     }
 
     // ===== print =====
+    // Prints one table: a copy of it (and today's date) is put in a print-only block, everything else on the page is
+    // hidden by a print stylesheet while the print dialog is open. (A hidden iframe printed the whole page in Chrome.)
     function printTable(table) {
-        var html = '<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><style>' +
-            'body{direction:rtl;font-family:Tahoma,sans-serif;margin:16px;}' +
-            'table{width:100%;border-collapse:collapse;}' +
-            'td,th{border:1px solid #ccc;padding:6px;text-align:center;}' +
-            '.print-date{font-size:16px;color:#555;margin-bottom:8px;text-align:end;}' +
-            '</style></head><body><div class="print-date">' + formatTodayJalali() + '</div>' + table.outerHTML + '</body></html>';
+        var area = document.createElement('div');
+        area.id = 'pgco-print-area';
 
-        var iframe = document.createElement('iframe');
-        iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:0;height:0;border:0;';
+        var date = document.createElement('div');
+        date.className = 'pgco-print-date';
+        date.textContent = formatTodayJalali();
+
+        var copy = table.cloneNode(true);
+        copy.removeAttribute('id');
+
+        area.appendChild(date);
+        area.appendChild(copy);
+
+        var style = document.createElement('style');
+        style.textContent = '@media screen{#pgco-print-area{display:none!important}}' +
+            '@media print{' +
+            'body>*:not(#pgco-print-area){display:none!important}' +
+            '#pgco-print-area{display:block!important;direction:rtl;font-family:Tahoma,sans-serif;margin:16px;color:#000!important;background:#fff!important}' +
+            '#pgco-print-area .pgco-print-date{font-size:16px;color:#555!important;margin-bottom:8px;text-align:end}' +
+            '#pgco-print-area table{width:100%;border-collapse:collapse}' +
+            '#pgco-print-area th,#pgco-print-area td{border:1px solid #ccc!important;padding:6px;text-align:center;color:#000!important;background:#fff!important}' +
+            '#pgco-print-area th{font-weight:bold}' +
+            '}';
 
         function cleanup() {
-            if (iframe.parentNode) {
-                iframe.parentNode.removeChild(iframe);
+            window.removeEventListener('afterprint', cleanup);
+            if (area.parentNode) {
+                area.parentNode.removeChild(area);
+            }
+            if (style.parentNode) {
+                style.parentNode.removeChild(style);
             }
         }
 
-        // onload is set before the content exists, so it can never be missed
-        iframe.onload = function () {
-            var win = iframe.contentWindow;
-            win.addEventListener('afterprint', cleanup);
-            win.focus();
-            win.print();
-            setTimeout(cleanup, 300000);
-        };
-        iframe.srcdoc = html;
-        document.body.appendChild(iframe);
+        document.head.appendChild(style);
+        document.body.appendChild(area);
+        window.addEventListener('afterprint', cleanup);
+
+        // Chrome blocks here until the dialog is closed; other browsers return at once and fire afterprint later
+        window.print();
+
+        // safety net for a browser that never fires afterprint
+        setTimeout(cleanup, 300000);
     }
 
     // ===== bar markup (same as Shortcode.php) =====
@@ -389,7 +408,11 @@
                 stickyItems.forEach(function (item) {
                     observer.observe(item.table);
                 });
+                // content above the tables that changes size after load (fonts, images) moves the bars too
+                observer.observe(document.body);
             }
+
+            window.addEventListener('load', requestUpdate);
 
             updateSticky();
         }

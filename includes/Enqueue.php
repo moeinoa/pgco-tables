@@ -140,14 +140,36 @@ class Enqueue
             true
         );
 
-        // Sticky bar offsets (the height of the fixed site header per window width)
+        // Sticky bar offsets (the height of the fixed site header per window width), printed as CSS right after frontend.css
         $offsets = apply_filters('pgco_tables_sticky_offsets', [[1024, 115], [768, 81], [0, 64]]);
 
-        wp_add_inline_script(
-            self::FRONTEND_HANDLE,
-            'window.pgcoTablesTax=' . wp_json_encode(['offsets' => $offsets]) . ';',
-            'before'
-        );
+        wp_add_inline_style(self::FRONTEND_HANDLE, self::sticky_css((array) $offsets));
+    }
+
+    /**
+     * The `top` of the sticky bar from [min window width (exclusive), px] pairs: width 0 is the base rule, every other pair a min-width
+     * media query, narrow to wide, so the widest matching one wins (the same result as the old script's first match from wide to narrow).
+     *
+     * @param array $offsets Pairs from the pgco_tables_sticky_offsets filter.
+     * @return string
+     */
+    private static function sticky_css(array $offsets): string
+    {
+        $pairs = [];
+        foreach ($offsets as $pair) {
+            if (is_array($pair) && isset($pair[0], $pair[1]) && is_numeric($pair[0]) && is_numeric($pair[1])) {
+                $pairs[(int) $pair[0]] = (int) $pair[1];
+            }
+        }
+        ksort($pairs);
+
+        $css = '';
+        foreach ($pairs as $width => $top) {
+            $rule = '.tp-vat-header{top:' . $top . 'px}';
+            $css .= $width > 0 ? '@media (min-width:' . ($width + 1) . 'px){' . $rule . '}' : $rule;
+        }
+
+        return $css;
     }
 
     /**

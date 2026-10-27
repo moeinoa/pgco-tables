@@ -4,7 +4,7 @@
  * Plugin Name: PGCO Tables
  * Plugin URI: https://github.com/moeinoa/pgco-tables
  * Description: Plugin to retrieve and save data from Google Sheets and display tables on the website
- * Version: 2.1.0
+ * Version: 2.1.1
  * Author: Moein Akbari
  * Author URI: https://moein-akbari.ir/
  * Text Domain: pgco-tables
@@ -27,7 +27,7 @@ use PGCO_Tables\Admin\SyncPage;
 use PGCO_Tables\Debug\Debugger;
 
 // Define plugin constants
-define('PGCO_TABLES_VERSION', '2.1.0');
+define('PGCO_TABLES_VERSION', '2.1.1');
 define('PGCO_TABLES_FILE', __FILE__);
 define('PGCO_TABLES_DIR', plugin_dir_path(PGCO_TABLES_FILE));
 define('PGCO_TABLES_URL', plugin_dir_url(PGCO_TABLES_FILE));

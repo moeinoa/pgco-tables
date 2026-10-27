@@ -1,19 +1,13 @@
 /**
- * Price tables: VAT toggle, today's date and print button above each table; the bar sticks while its table scrolls.
+ * Price tables: VAT toggle, today's date and print button above each table.
  *
  * The bar's markup comes from the pgco-tables shortcode (Shortcode.php). Tables without one (TablePress) get the same markup built here.
  * VAT per table: data-pgco-vat = divide | multiply | none, data-pgco-rate = the factor (1.1). Legacy values: subtract = divide, add = multiply. Ticking always shows the price with VAT. Styles live in frontend.css.
+ * The bar sticks with CSS (position: sticky in frontend.css), not with JavaScript: this file only makes sure the bar and its table sit in one
+ * .tp-table-block so the bar leaves together with its own table.
  */
 (function () {
     'use strict';
-
-    var config = window.pgcoTablesTax || {};
-
-    // Sticky top offsets as [min window width (exclusive), offset in px]; filterable in PHP (pgco_tables_sticky_offsets)
-    var STICKY_OFFSETS = config.offsets || [[1024, 115], [768, 81], [0, 64]];
-
-    // A table inside an element with this class never sticks (toggle and print still work)
-    var NO_STICKY_CLASS = 'pgco-no-sticky';
 
     var DEFAULT_VAT_RATE = 1.1;
 
@@ -186,126 +180,33 @@
         return /[۰-۹]/.test(original) ? toPersianDigits(text) : text;
     }
 
-    // ===== sticky bar =====
-    var stickyItems = [];
-    var ticking = false;
-
-    function getStickyOffset() {
-        var width = window.innerWidth;
-        for (var i = 0; i < STICKY_OFFSETS.length; i++) {
-            if (width > STICKY_OFFSETS[i][0]) {
-                return STICKY_OFFSETS[i][1];
-            }
+    // ===== block: bar + scroll box + table =====
+    // The shortcode prints this block already. TablePress tables, and pages cached before the block existed, get it here: the table moves into a
+    // scroll box (a wide table scrolls sideways there, never in an ancestor of the bar, which would stop position: sticky) and the bar
+    // is put in front of the box, both inside one .tp-table-block.
+    function ensureBlock(table) {
+        var box = table.parentElement;
+        if (box && box.classList.contains('tp-table-scroll') && box.parentElement && box.parentElement.classList.contains('tp-table-block')) {
+            return box.parentElement;
         }
-        return 0;
-    }
 
-    // Ancestors that can scroll on their own (the page itself is not one of them)
-    function scrollingAncestors(element) {
-        var list = [];
-        for (var node = element.parentElement; node && node !== document.body && node !== document.documentElement; node = node.parentElement) {
-            var overflowY = window.getComputedStyle(node).overflowY;
-            if (overflowY === 'auto' || overflowY === 'scroll') {
-                list.push(node);
-            }
+        var bar = table.previousElementSibling;
+        if (!bar || !bar.classList.contains('tp-vat-header')) {
+            bar = null;
         }
-        return list;
-    }
 
-    function setStatic(item) {
-        if (item.state === 'static') {
-            return;
+        var block = document.createElement('div');
+        block.className = 'tp-table-block';
+        box = document.createElement('div');
+        box.className = 'tp-table-scroll';
+
+        table.parentNode.insertBefore(block, table);
+        if (bar) {
+            block.appendChild(bar);
         }
-        var style = item.bar.style;
-        style.position = '';
-        style.top = '';
-        style.left = '';
-        style.width = '';
-        if (item.placeholder.parentNode) {
-            item.placeholder.parentNode.removeChild(item.placeholder);
-        }
-        item.state = 'static';
-        item.top = item.left = item.width = null;
-    }
-
-    function setFixed(item, top, left, width, height) {
-        var style = item.bar.style;
-        if (item.state !== 'fixed') {
-            // The placeholder takes the bar's place in the flow only while the bar is fixed, so the table does not jump
-            // (and it adds no gap of its own in a flex/grid parent while the bar is static)
-            item.placeholder.style.height = height + 'px';
-            item.bar.parentNode.insertBefore(item.placeholder, item.bar);
-            style.position = 'fixed';
-            item.state = 'fixed';
-        }
-        if (item.top !== top) {
-            style.top = top + 'px';
-            item.top = top;
-        }
-        if (item.left !== left) {
-            style.left = left + 'px';
-            item.left = left;
-        }
-        if (item.width !== width) {
-            style.width = width + 'px';
-            item.width = width;
-        }
-    }
-
-    function updateSticky() {
-        ticking = false;
-
-        var offset = getStickyOffset();
-
-        // read everything first, then write (no layout thrash)
-        var reads = stickyItems.map(function (item) {
-            var read = {
-                // where the bar naturally is: the bar itself while static, its placeholder while fixed
-                placeholder: (item.state === 'fixed' ? item.placeholder : item.bar).getBoundingClientRect(),
-                table: item.table.getBoundingClientRect(),
-                height: item.bar.offsetHeight,
-                limitTop: offset,
-                limitBottom: Infinity
-            };
-
-            // A table inside a box that scrolls on its own (e.g. the price board) sticks to that box, not to the window
-            item.scrollers.forEach(function (box) {
-                if (box.scrollHeight > box.clientHeight + 1) {
-                    var rect = box.getBoundingClientRect();
-                    read.limitTop = Math.max(read.limitTop, rect.top);
-                    read.limitBottom = Math.min(read.limitBottom, rect.bottom);
-                }
-            });
-
-            return read;
-        });
-
-        stickyItems.forEach(function (item, i) {
-            var read = reads[i];
-
-            // Not displayed (e.g. in an inactive tab): nothing to stick
-            if (!read.table.height) {
-                setStatic(item);
-                return;
-            }
-
-            // read.placeholder is the bar's natural position (see above)
-            if (read.placeholder.top > read.limitTop) {
-                setStatic(item);
-                return;
-            }
-
-            // the bar stays on top of the table's last row once the table ends
-            var top = Math.min(read.limitTop, Math.min(read.table.bottom, read.limitBottom) - read.height);
-            setFixed(item, top, read.placeholder.left, read.placeholder.width, read.height);
-        });
-    }
-
-    function requestUpdate() {
-        if (!ticking) {
-            ticking = true;
-            window.requestAnimationFrame(updateSticky);
-        }
+        block.appendChild(box);
+        box.appendChild(table);
+        return block;
     }
 
     // ===== init =====
@@ -325,10 +226,11 @@
 
             var mode = getVatMode(table);
 
-            var bar = table.previousElementSibling;
-            if (!bar || !bar.classList.contains('tp-vat-header')) {
+            var block = ensureBlock(table);
+            var bar = block.querySelector('.tp-vat-header');
+            if (!bar) {
                 bar = buildBar(mode);
-                table.parentNode.insertBefore(bar, table);
+                block.insertBefore(bar, block.firstChild);
             }
 
             if (bar.hasAttribute('data-ready')) {
@@ -377,45 +279,7 @@
             if (checkbox && mode !== 'none') {
                 bindToggle(checkbox, rows, mode, rate);
             }
-
-            if (table.closest('.' + NO_STICKY_CLASS)) {
-                return;
-            }
-
-            var placeholder = document.createElement('div');
-            placeholder.className = 'tp-sticky-placeholder';
-
-            stickyItems.push({
-                table: table,
-                bar: bar,
-                placeholder: placeholder,
-                scrollers: scrollingAncestors(table),
-                state: 'static',
-                top: null,
-                left: null,
-                width: null
-            });
         });
-
-        if (stickyItems.length) {
-            // capture: a scroll inside a box (not only the window's) also moves the bar
-            window.addEventListener('scroll', requestUpdate, { passive: true, capture: true });
-            window.addEventListener('resize', requestUpdate);
-
-            // a table that gets shown or resized (tab switch, late layout) is measured again at once
-            if (window.ResizeObserver) {
-                var observer = new ResizeObserver(requestUpdate);
-                stickyItems.forEach(function (item) {
-                    observer.observe(item.table);
-                });
-                // content above the tables that changes size after load (fonts, images) moves the bars too
-                observer.observe(document.body);
-            }
-
-            window.addEventListener('load', requestUpdate);
-
-            updateSticky();
-        }
     }
 
     if (document.readyState === 'loading') {

@@ -59,6 +59,8 @@ Ticking always raises the price. Values are stored in the table's `_table_option
 
 Add the class `pgco-no-sticky` to a parent element to keep the bar of its tables from sticking.
 
+The bar sticks with CSS (`position: sticky`), so no ancestor of a table may have `overflow` other than `visible`/`clip` (it would stop the bar from sticking). Each table is printed as `.tp-table-block` (bar + `.tp-table-scroll` + table); wide tables scroll sideways in `.tp-table-scroll`. Inside a box that scrolls on its own (e.g. the price board) the theme sets `.tp-vat-header { top: 0 }`.
+
 ## Debug log
 
 Off by default. Add `define('PGCO_TABLES_DEBUG', true);` to `wp-config.php`; the log is written to `wp-content/uploads/pgco-tables/debug.log` (a folder closed to web access) and shown under **Tables → گزارش دیباگ**.

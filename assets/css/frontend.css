@@ -72,7 +72,27 @@ span[id^="tablepress-"][id$="-description"] {
 }
 
 /* Bar above each table: VAT toggle, date, print button (markup: Shortcode.php, or tax-tables.js for TablePress tables) */
+/*
+ * Each table is a block (bar + scroll box + table). The bar sticks with native position: sticky, so the browser keeps it exactly in place
+ * while scrolling and it leaves with the end of its own table. The `top` offsets (height of the fixed site header per window width)
+ * are printed after this file from the pgco_tables_sticky_offsets filter (Enqueue.php); inside a box that scrolls on its own the theme sets top: 0.
+ * Sticky needs NO overflow on any ancestor of the bar: wide tables scroll sideways in .tp-table-scroll, which is a sibling of the bar.
+ */
+.tp-table-block {
+	min-width: 0;
+}
+
+.tp-table-scroll {
+	overflow-x: auto;
+}
+
+.pgco-no-sticky .tp-vat-header {
+	position: static;
+}
+
 .tp-vat-header {
+	position: sticky;
+	top: 0;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -94,10 +114,6 @@ span[id^="tablepress-"][id$="-description"] {
 
 .tp-table-date::before {
 	content: 'آخرین بروزرسانی: ';
-}
-
-.tp-sticky-placeholder {
-	height: 0;
 }
 
 .tp-vat-header .tp-print-btn {

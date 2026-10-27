@@ -92,9 +92,13 @@ class Shortcode
 			echo do_shortcode('[table id="' . esc_attr($options['tablepress-id']) . '" /]'); // phpcs:ignore WordPress.Security.EscapeOutput -- table plugin output
 			echo '</div>';
 		} elseif ($table) {
+			// One block per table: the sticky bar leaves with its own table; a wide table scrolls sideways in the scroll box (a sibling of the bar)
+			echo '<div class="tp-table-block">';
 			$this->render_bar($vat_mode);
 			$cols = $this->column_count($table);
+			echo '<div class="tp-table-scroll">';
 			$this->render_table($table, $vat_mode, $vat_rate, PostType::mobile_columns($options, $cols), $cols);
+			echo '</div></div>';
 		} else { ?>
 <div class="pgco-tables-empty">
 	<?php esc_html_e('در حال حاضر اطلاعاتی برای نمایش این جدول موجود نیست.', 'pgco-tables'); ?>

@@ -97,7 +97,7 @@ class Shortcode
 			$this->render_bar($vat_mode);
 			$cols = $this->column_count($table);
 			echo '<div class="tp-table-scroll">';
-			$this->render_table($table, $vat_mode, $vat_rate, PostType::mobile_columns($options, $cols), $cols);
+			$this->render_table($table, $vat_mode, $vat_rate, PostType::mobile_columns($options, $cols), $cols, $this->filters_json($options, $table));
 			echo '</div></div>';
 		} else { ?>
 <div class="pgco-tables-empty">
@@ -239,15 +239,41 @@ class Shortcode
 	}
 
 	/**
+	 * The enabled filter dropdowns of a table as the JSON table-filters.js reads from data-pgco-filters ('' = no filters).
+	 */
+	private function filters_json(array $options, array $table): string
+	{
+		$config = PostType::filters_config($options, $table);
+		$items  = [];
+
+		foreach ($config['items'] as $item) {
+			if ($item['enabled']) {
+				unset($item['enabled']);
+				$items[] = $item;
+			}
+		}
+
+		if (! $items) {
+			return '';
+		}
+
+		return (string) wp_json_encode([
+			'items' => $items,
+			'group' => $config['group'],
+			'empty' => ['on' => $config['empty_on'], 'text' => $config['empty_text']],
+		]);
+	}
+
+	/**
 	 * @param int[] $visible 0-based indexes of the columns that stay visible on mobile
 	 */
-	private function render_table(array $table, string $vat_mode, string $vat_rate, array $visible, int $cols): void
+	private function render_table(array $table, string $vat_mode, string $vat_rate, array $visible, int $cols, string $filters_json = ''): void
 	{
 		$divide      = $vat_mode === 'divide';
 		$rate        = (float) $vat_rate;
 		$collapsible = $cols > 0 && count($visible) < $cols;
 ?>
-<table class="pgco-table<?php echo $collapsible ? ' pgco-table--collapsible' : ''; ?>" data-pgco-vat="<?php echo esc_attr($vat_mode); ?>" data-pgco-rate="<?php echo esc_attr($vat_rate); ?>">
+<table class="pgco-table<?php echo $collapsible ? ' pgco-table--collapsible' : ''; ?>" data-pgco-vat="<?php echo esc_attr($vat_mode); ?>" data-pgco-rate="<?php echo esc_attr($vat_rate); ?>"<?php if ($filters_json !== '') { ?> data-pgco-filters="<?php echo esc_attr($filters_json); ?>"<?php } ?>>
 	<?php if (isset($table['head'])) { ?>
 	<thead>
 		<?php foreach ($table['head'] as $row) { ?>

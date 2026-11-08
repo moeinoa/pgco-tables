@@ -235,3 +235,163 @@ span[id^="tablepress-"][id$="-description"] {
 		display: none;
 	}
 }
+
+/* Filters: one button in the bar, the dropdowns open in a panel under the bar (table-filters.js) */
+.tp-vat-header.pgco-tf-on .tp-vat-label {
+	flex: none;
+}
+
+.pgco-tf {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	min-width: 0;
+	margin-inline: 12px;
+}
+
+.pgco-tf-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 32px;
+	padding: 0 12px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	background: #fff;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+}
+
+.pgco-tf-toggle::after {
+	content: '';
+	width: 6px;
+	height: 6px;
+	margin-inline-start: 2px;
+	border-right: 2px solid currentcolor;
+	border-bottom: 2px solid currentcolor;
+	transform: translateY(-2px) rotate(45deg);
+}
+
+.pgco-tf-toggle[aria-expanded="true"]::after {
+	transform: translateY(1px) rotate(-135deg);
+}
+
+.pgco-tf-toggle.is-active {
+	border-color: var(--pgco-primary, #d71a20);
+}
+
+.pgco-tf-count {
+	box-sizing: border-box;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 5px;
+	border-radius: 9px;
+	background: var(--pgco-primary, #d71a20);
+	color: #fff;
+	font-size: 11px;
+	line-height: 18px;
+	text-align: center;
+}
+
+.pgco-tf-count[hidden] {
+	display: none;
+}
+
+/* Positioned against the sticky bar (it is a positioned ancestor); paints over the table */
+.pgco-tf-panel {
+	position: absolute;
+	inset-inline: 0;
+	top: 100%;
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+	gap: 8px;
+	padding: 12px;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-top: 0;
+	border-radius: 0 0 8px 8px;
+	box-shadow: 0 8px 16px hsl(0deg 0% 0% / 15%);
+}
+
+.pgco-tf-panel[hidden] {
+	display: none;
+}
+
+.pgco-tf-panel select {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 100%;
+	height: 32px;
+	padding: 0 8px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	background: #fff;
+	color: #111;
+	font: inherit;
+	cursor: pointer;
+}
+
+.pgco-tf-panel select.is-active {
+	border-color: var(--pgco-primary, #d71a20);
+}
+
+.pgco-tf-clear {
+	grid-column: 1 / -1;
+	justify-self: start;
+	padding: 6px 14px;
+	border: 1px solid var(--pgco-primary, #d71a20);
+	border-radius: 8px;
+	background: #fff;
+	color: var(--pgco-primary, #d71a20);
+	font: inherit;
+	cursor: pointer;
+}
+
+.pgco-tf-hide {
+	display: none !important;
+}
+
+.pgco-tf-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding: 16px;
+	background: #f9fafb;
+	border: 1px dashed #d2d6da;
+	border-radius: .375rem;
+	text-align: center;
+	color: #666;
+}
+
+.pgco-tf-empty[hidden] {
+	display: none;
+}
+
+.pgco-tf-empty button {
+	padding: 6px 14px;
+	border: 1px solid var(--pgco-primary, #d71a20);
+	border-radius: 8px;
+	background: #fff;
+	color: var(--pgco-primary, #d71a20);
+	font: inherit;
+	cursor: pointer;
+}
+
+/* Zebra rows follow the visible rows while a filter hides some (nth-child counts hidden rows too) */
+@media (min-width: 768px) {
+	table.pgco-table.pgco-tf-striped tbody tr:nth-child(even) {
+		background: #fff;
+	}
+
+	table.pgco-table.pgco-tf-striped tbody tr.pgco-tf-alt {
+		background: #f9f9f9;
+	}
+
+	table.pgco-table.pgco-tf-striped tbody tr:hover {
+		background: #f9f9f9;
+	}
+}

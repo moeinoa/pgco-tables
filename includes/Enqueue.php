@@ -13,6 +13,10 @@ class Enqueue
 
     private const RESPONSIVE_HANDLE = 'pgco-tables-responsive';
 
+    private const FILTERS_HANDLE = 'pgco-tables-filters';
+
+    private const FILTERS_CORE_HANDLE = 'pgco-tables-filters-core';
+
     private static $instance = null;
 
     /**
@@ -96,6 +100,23 @@ class Enqueue
             true
         );
 
+        // Filter cards + live preview (vanilla JS; shares the value-reading code with the front end)
+        wp_enqueue_script(
+            'pgco-tables-filters-core',
+            PGCO_TABLES_URL . 'assets/js/table-filters-core.js',
+            [],
+            self::asset_version('assets/js/table-filters-core.js'),
+            true
+        );
+
+        wp_enqueue_script(
+            'pgco-tables-admin-filters',
+            PGCO_TABLES_URL . 'assets/js/admin-filters.js',
+            ['pgco-tables-filters-core'],
+            self::asset_version('assets/js/admin-filters.js'),
+            true
+        );
+
         wp_localize_script('pgco-tables-admin', 'pgcoTablesAdmin', [
             'ajaxUrl'      => admin_url('admin-ajax.php'),
             'syncing'      => __('در حال بروزرسانی...', 'pgco-tables'),
@@ -137,6 +158,23 @@ class Enqueue
             PGCO_TABLES_URL . 'assets/js/responsive-tables.js',
             [],
             self::asset_version('assets/js/responsive-tables.js'),
+            true
+        );
+
+        // Filter dropdowns above the tables that have filters (needs the bar built by tax-tables.js)
+        wp_register_script(
+            self::FILTERS_CORE_HANDLE,
+            PGCO_TABLES_URL . 'assets/js/table-filters-core.js',
+            [],
+            self::asset_version('assets/js/table-filters-core.js'),
+            true
+        );
+
+        wp_register_script(
+            self::FILTERS_HANDLE,
+            PGCO_TABLES_URL . 'assets/js/table-filters.js',
+            [self::FRONTEND_HANDLE, self::FILTERS_CORE_HANDLE],
+            self::asset_version('assets/js/table-filters.js'),
             true
         );
 
@@ -184,6 +222,7 @@ class Enqueue
     {
         wp_enqueue_script(self::FRONTEND_HANDLE);
         wp_enqueue_script(self::RESPONSIVE_HANDLE);
+        wp_enqueue_script(self::FILTERS_HANDLE);
         wp_enqueue_style(self::FRONTEND_HANDLE);
 
         if (wp_style_is(self::FRONTEND_HANDLE, 'done') || ! did_action('wp_head') || did_action('wp_print_footer_scripts')) {
